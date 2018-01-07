@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Bus App Test 1</title>
+	<script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDckEAi-lpAfvpCUnVGOpYbI_d-YfKMLHA">
+    </script>
+	<script src = "gmap.js" type = "text/javascript"></script>
+	<script src="caccess.js"></script>	
+	<style>
+	  html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+	  #log {
+		background: white;
+		padding: 10px;
+	  }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+	<div id="log"></div>
+    <script>
+		var map;
+		var home;
+		var buss;
+		var tie;
+		var log;
+		var data = new CAccess(); 
+		
+			
+		
+		/*
+		getLocation();
+		
+		function getLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition);
+			} else {
+				console.log ("Geolocation is not supported by this browser.");
+			}
+		}
+		function showPosition(position) {
+		
+			map = new GMap(document.getElementById('map'));
+			map.setZoom(12);
+			map.setCenter(position.coords.latitude,position.coords.longitude);
+			map.runMap();
+		
+			home = new HomeMarker('H',map.getInstance(),map.getCenter());
+			home.initMarker();
+			
+			buss = new BusMarker('B',map.getInstance(),map.getCenter());
+			buss.initMarker();
+			
+			log = new Log(map.getInstance(),document.getElementById('log'));
+			log.initLog('TOP_RIGHT');
+			log.addBox(home.getId());
+			log.addBox(buss.getId());
+			
+			tie = new Tie(map.getInstance(),home.getPosition(),buss.getPosition());
+			tie.tieUp(log,buss.getId(),home.getId());
+			data.getMyBusses('lhr',updatePosition);
+			data.getTerminal('lhr',updateTerminal);
+			
+			//map.getInstance().controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document('log'));
+		/}*/
+		
+		var updatePosition = function (coords){
+			buss.setPosition(coords);
+			//tie.setSource(coords);
+			//tie.tieUp(log,buss.getId(),home.getId());
+			console.log(" -- Bus Positions : "+buss.getPosition()+" : "+buss.getPosition());
+		}
+		
+		var updateLog = function (distance, duration){
+			if(!log.addBox(buss.getId()))
+				log.updateBox(buss.getId(),distance, duration);		
+			
+		}
+		
+		var updateTerminal = function (coords){
+			map = new GMap(document.getElementById('map'));
+			map.setZoom(12);
+			map.setCenter(coords.lat,coords.lng);
+			map.runMap();
+		
+			home = new HomeMarker('H',map.getInstance(),map.getCenter());
+			home.initMarker();
+			
+			buss = new BusMarker('B',map.getInstance(),map.getCenter());
+			buss.initMarker();
+			
+			log = new Log(map.getInstance(),document.getElementById('log'));
+			log.initLog('TOP_RIGHT');
+			log.addBox(home.getId());
+			log.addBox(buss.getId());
+			
+			//tie = new Tie(map.getInstance(),home.getPosition(),buss.getPosition());
+			//tie.tieUp(log,buss.getId(),home.getId());
+			data.getMyBusses('lhr',updatePosition);
+			
+			
+		}
+		data.getTerminal('lhr',updateTerminal);
+		
+		//data.getMyBusses('lhr',document.getElementById('map'));
+    </script>
+  </body>
+</html>
